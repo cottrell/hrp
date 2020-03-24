@@ -70,9 +70,9 @@ def get_ivp(cov, **kargs):
 def unlink(link):
     """Quasi diagonalization. Simpler faster way to reverse the graph.
     Check against getQuasiDiag.
-        In [132]: %timeit p.unlink(link)                                                                                                                                                                                   
+        In [132]: %timeit p.unlink(link)
         12.9 µs ± 328 ns per loop (mean ± std. dev. of 7 runs, 100000 loops each)
-        In [133]: %timeit p.getQuasiDiag(link)                                                                                                                                                                             
+        In [133]: %timeit p.getQuasiDiag(link)
         7.34 ms ± 341 µs per loop (mean ± std. dev. of 7 runs, 100 loops each)
     """
     link = link.astype(int)
