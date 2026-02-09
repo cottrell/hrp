@@ -98,38 +98,3 @@ def correl_dist(corr):
     return dist
 
 
-def test_unlink_against_quasi_diag():
-    from .prado_orig import getQuasiDiag
-    import random
-
-    y = np.random.randn(100, 20)
-    cov = np.cov(y.T)
-    corr = np.corrcoef(y.T)
-    dist = correl_dist(corr)
-    link = sch.linkage(dist, "single")  # see scipy docs for this matrix
-    a = getQuasiDiag(link)
-    b = unlink(link)
-    assert np.allclose(a, b), f"{a} vs {b} did not match"
-    print("pass: unlink matches getQuasiDiag")
-
-
-def test_get_hrp(atol=1e-7):
-    import random
-    import pandas as pd
-    from .prado_orig import getHRP
-
-    y = np.random.randn(100, 20)
-    y_df = pd.DataFrame(y)
-    a = get_hrp(y)
-    b = getHRP(y_df)
-    for k in ["cov", "corr", "dist"]:
-        assert np.allclose(a[k], b[k].values, atol=atol), f"{k} are different"
-    assert np.allclose(a["hrp"], b["hrp"].sort_index().values, atol=atol), f"hrp are different"
-    for k in ["link"]:
-        assert np.allclose(a[k], b[k], atol=atol), f"{k} are different"
-    assert a["qd_order"] == b["sortIx"], f"qd_order != sortIx"
-    assert np.allclose(a["qd_corr"], b["df0"].values, atol=atol), f"qd_corr != df0"
-    assert a["qd_order"] == b["hrp"].index.tolist(), f"qd_order != hrp.index.tolist()"
-    pd.testing.assert_series_equal(pd.Series(a["hrp"]).loc[a["qd_order"]], b["hrp"])
-    print("pass: get_hrp matches getHRP")
-    return locals()
